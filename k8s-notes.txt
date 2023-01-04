@@ -1,0 +1,22 @@
+01/03/2023   Kubernetes (K8S)
+
+1. List all worker nodes (Node group nodes) --> kubectl get nodes 
+2. List all pods running in the namespace --> kubectl get pods/po/pod (It will list all the pods in default namespace)
+3. List pods in LOGGING namespace --> kubectl get pods -n logging or kubectl get pods --namespace logging
+4. List namespaces --> kubectl get namespaces/ns/namespace 
+5. Why namespace is needed in K8S? In Kubernetes, namespaces provides a mechanism for isolating groups of 
+resources within a single cluster.
+6. Deployment in K8S --> Behind scene creates Replica Set. In case pod goes down Deployment makes sure 
+another pod is created. 
+7. Scaling up and down in K8S --> 
+    7.1  kubectl scale --replicas 5 deployment frontend
+    7.2 List deployments --> kubectl get deployments/deploy/deployment
+    7.3 Possible to Scale pods from manifest yaml file as well. 
+
+
+Statefull app in K8S
+
+1. Statefull means Persistent volume is created and in case pod goes down data will be persisted/kept 
+2. Get Storageclass --> kubectl get sc/storageclass/storageclasses 
+3. kubectl create secret generic mysql-pass --from-literal=password=eks-orchsky-mysql-pw --namespace statefull
+4. kubectl get secret --namespace statefull
