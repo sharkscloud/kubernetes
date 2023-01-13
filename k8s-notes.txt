@@ -25,6 +25,8 @@ Statefull app in K8S
 
 1/10/2023  Tuesday 
 
+Configure CSI (Container Storage Interface)
+
 1. kubectl get all -l app.kubernetes.io/name=aws-ebs-csi-driver -n kube-system
 
 2. Managing the Amazon EBS CSI driver as an Amazon EKS add-on
@@ -53,3 +55,27 @@ Statefull app in K8S
     5.3 kubectl -n kube-system get configmap aws-auth -o yaml > aws-auth-configmap.yaml
     5.4 kubectl apply -f aws-auth-configmap.yaml -n kube-system
     5.5 kubectl -n kube-system describe configmap aws-auth
+
+
+    eksctl create addon --name aws-ebs-csi-driver --cluster Orchsky-cluster --service-account-role-arn arn:aws:iam::062315287263:role/AmazonEKS_EBS_CSI_DriverRole --force
+
+    eksctl create iamserviceaccount \
+  --name ebs-csi-controller-sa \
+  --namespace kube-system \
+  --cluster Orchsky-cluster \
+  --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+  --approve \
+  --role-only \
+  --role-name AmazonEKS_EBS_CSI_DriverRole
+
+
+  oidc_id=$(aws eks describe-cluster --name Orchsky-cluster --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
+
+
+1/12/2023   Thursday (Kubernetes cont. )
+
+1. Limitation of Deployment --> During Stateful app deployment extra Persistent Volumes cannot be created. 
+For example: lets say number of pods should be scaled from 1 to 2. In this case deployment cannot create 
+second pv ( Persistent Volume) for 2nd Pod. In order to solve this problem StatefulSet will be used. 
+2. In order to overcome above limitation we can use StatefulSet from Kubernetes 
+3. kubectl get statefulset/sts 
